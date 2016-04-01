@@ -18,7 +18,7 @@ if (window.location.search.match(/[^a-z]debug([^a-z]|$)/i)) {
     $.mockjax({
       url: '/login',
       type: 'POST',
-      proxy: 'mocks/token.json'
+      proxy: 'test/mocks/token.json'
     });
 
 }
