@@ -1,7 +1,7 @@
 {
     "id": 123,
     "title": "Alice in Wonderland",
-    "first_step": 123,
+    "first_step_id": 123,
     "created_at": 1398902555536968492,
     "updated_at": 1398902555536968492
 }
