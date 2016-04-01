@@ -4,12 +4,12 @@
     ns.builder = {};
 
     var loadedStories;
-    var loadedSteps;
 
     // cached elements
     var storyList = $('#story-list');
     var createStory = $('#create-story');
     var editStory = $('#edit-story');
+    var storyIdElem = editStory.find('.story-id');
     var createStepForm = $('.create-story-step');
     var currentSteps = $('.current-steps');
 
@@ -28,6 +28,7 @@
         })[0];
         if (story) {
             ns.views.hide();
+            storyIdElem.val(id);
             ns.builder.initStoryEdit(story);
         } else {
             ns.showMessage('Unable to edit story, I don\'t know that one...');
@@ -116,9 +117,8 @@
             type: 'GET',
             dataType: 'json',
             success: function stepsLoaded(data) {
-                console.log('loaded steps', data);
-                loadedSteps = data;
-                renderSteps(loadedSteps, story);
+                console.log('loaded steps:', data);
+                renderSteps(data, story);
             },
             error: function stepLoadError(xhr) {
                 console.error(xhr);
@@ -130,46 +130,54 @@
     function renderSteps(steps, story) {
         currentSteps.find('li').remove();
         steps.forEach(function renderStep(step) {
-            var newStep = $('<li>');
-            newStep
-                .append( '<h4>Step ID: <span class="step-id">' + step.id + '</span></h4>' )
-                .append('<form>')
-                .find('form')
-                    .addClass('edit-story-step')
-                    .append('<input type="hidden" name="id" value="' + step.id + '">')
-                    .append('<input type="hidden" name="story_id" value="' + step.story_id + '">')
-                    .append(
-                        $('<fieldset>')
-                            .append('<h4>Step Text</h4>')
-                            .append('<textarea class="step-text" name="body">' + step.body + '</textarea>')
-                    )
-                    .append(
-                        $('<fieldset>')
-                            .append('<label>Option A Text</label>')
-                            .append('<input type="text" class="step-option-a" name="option_a_text" value="' + (step.option_a_text || '') + '">')
-                            .append('<label>Option A Next Step</label>')
-                            .append('<input type="text" class="step-option-a-next" name="option_a_step_id" value="' + (step.option_a_step_id || '') + '">')
-                    )
-                    .append(
-                        $('<fieldset>')
-                            .append('<label>Option B Text</label>')
-                            .append('<input type="text" class="step-option-b" name="option_b_text" value="' + (step.option_b_text || '') + '">')
-                            .append('<label>Option B Next Step</label>')
-                            .append('<input type="text" class="step-option-b-next" name="option_b_step_id" value="' + (step.option_b_step_id || '') + '">')
-                    )
-                    .append( $('<fieldset>').append('<input type="submit" value="Update">') );
-
-            currentSteps.append(newStep);
+            currentSteps.append(getStepElement(step));
         });
+    }
+
+    function getStepElement(step) {
+        var newStep = $('<li>');
+        newStep
+            .append( '<h4>Step ID: <span class="step-id">' + step.id + '</span></h4>' )
+            .append('<form>')
+            .find('form')
+                .addClass('edit-story-step')
+                .append('<input type="hidden" name="id" value="' + step.id + '">')
+                .append('<input type="hidden" name="story_id" value="' + step.story_id + '">')
+                .append(
+                    $('<fieldset>')
+                        .append('<h4>Step Text</h4>')
+                        .append('<textarea class="step-text" name="body">' + step.body + '</textarea>')
+                )
+                .append(
+                    $('<fieldset>')
+                        .append('<label>Option A Text</label>')
+                        .append('<input type="text" class="step-option-a" name="option_a_text" value="' + (step.option_a_text || '') + '">')
+                        .append('<label>Option A Next Step</label>')
+                        .append('<input type="text" class="step-option-a-next" name="option_a_step_id" value="' + (step.option_a_step_id || '') + '">')
+                )
+                .append(
+                    $('<fieldset>')
+                        .append('<label>Option B Text</label>')
+                        .append('<input type="text" class="step-option-b" name="option_b_text" value="' + (step.option_b_text || '') + '">')
+                        .append('<label>Option B Next Step</label>')
+                        .append('<input type="text" class="step-option-b-next" name="option_b_step_id" value="' + (step.option_b_step_id || '') + '">')
+                )
+                .append( $('<fieldset>').append('<input type="submit" value="Update">') );
+
+        return newStep;
+    }
+
+    function convertFormToJSON(elem) {
+        var data = {};
+        $(elem).serializeArray().forEach(function formatFormData(field) {
+            data[field.name] = field.value;
+        });
+        return data;
     }
 
     function gatherUpdateFormData(e) {
         e.preventDefault();
-        var stepData = {};
-        $(this).serializeArray().forEach(function formatStepData(field) {
-            stepData[field.name] = field.value;
-        });
-        ns.builder.updateStep(stepData);
+        ns.builder.updateStep(convertFormToJSON(this));
     }
 
     ns.builder.updateStep = function updateStep(step) {
@@ -189,8 +197,24 @@
 
     createStepForm.submit(function gatherStepCreateData(e) {
         e.preventDefault();
-        // TODO
+        ns.builder.createStep(convertFormToJSON(this));
     });
+
+    ns.builder.createStep = function createStep(step) {
+        $.ajax({
+            url: '/stories/' + step.story_id + '/steps',
+            type: 'POST',
+            dataType: 'json',
+            success: function stepUpdated(data) {
+                currentSteps.append(getStepElement(data));
+                ns.showMessage('Step created!');
+            },
+            error: function stepUpdateError(xhr) {
+                console.error(xhr);
+                ns.showMessage('Unable to create step.', JSON.stringify(xhr.responseText));
+            }
+        });
+    };
 
 
     window.cyoa = ns;
