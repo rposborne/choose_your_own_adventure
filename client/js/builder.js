@@ -14,35 +14,36 @@
     var currentSteps = $('.current-steps');
 
     ns.builder.init = function builderInit() {
-        storyList.on('click', '.edit-story', function initEdit(e) {
-            e.preventDefault();
-            var id = Number($(this).attr('href').substr(1));
-            var story = loadedStories.filter(function findStory(data) {
-                return (data.id === id);
-            })[0];
-            if (story) {
-                ns.views.hide();
-                ns.builder.initStoryEdit(story);
-            } else {
-                ns.showMessage('Unable to edit story, I don\'t know that one...');
-            }
-        });
-
-        createStory.find('form').submit(function doCreate(e) {
-            e.preventDefault();
-            ns.builder.createStory( $(this).find(':text').val(), function createDone(data) {
-                if (data) {
-                    ns.views.hide();
-                    createStory.find(':text').val('');
-                    ns.builder.initStoryEdit(data);
-                }
-            } );
-        });
-
-        $('.show-create-step').click(function toggleCreateForm() {
-            createStepForm.toggle();
-        });
+        storyList.on('click', '.edit-story', initEdit);
+        createStory.find('form').submit(showCreate);
+        $('.show-create-step').click(function toggleStepCreation() { createStepForm.toggle(); });
+        currentSteps.on('submit', 'form', gatherUpdateFormData);
     };
+
+    function initEdit(e) {
+        e.preventDefault();
+        var id = Number($(this).attr('href').substr(1));
+        var story = loadedStories.filter(function findStory(data) {
+            return (data.id === id);
+        })[0];
+        if (story) {
+            ns.views.hide();
+            ns.builder.initStoryEdit(story);
+        } else {
+            ns.showMessage('Unable to edit story, I don\'t know that one...');
+        }
+    }
+
+    function showCreate(e) {``
+        e.preventDefault();
+        ns.builder.createStory( $(this).find(':text').val(), function createDone(data) {
+            if (data) {
+                ns.views.hide();
+                createStory.find(':text').val('');
+                ns.builder.initStoryEdit(data);
+            }
+        } );
+    }
 
     ns.builder.loadStoryList = function loadStoryList() {
         $.ajax({
@@ -134,31 +135,55 @@
                 .append('<form>')
                 .find('form')
                     .addClass('edit-story-step')
-                    .append( '<input type="hidden" class="story-id" value="' + story.id + '">' )
                     .append(
                         $('<fieldset>')
                             .append('<h4>Step Text</h4>')
-                            .append('<textarea class="step-text">' + step.body + '</textarea>')
+                            .append('<textarea class="step-text" name="body">' + step.body + '</textarea>')
                     )
                     .append(
                         $('<fieldset>')
-                            .append('<label for="step-option-a">Option A Text</label>')
-                            .append('<input type="text" class="step-option-a" value="' + (step.option_a_text || '') + '">')
-                            .append('<label for="step-option-a-next">Option A Next Step</label>')
-                            .append('<input type="text" class="step-option-a-next" value="' + (step.option_a_step_id || '') + '">')
+                            .append('<label>Option A Text</label>')
+                            .append('<input type="text" class="step-option-a" name="option_a_text" value="' + (step.option_a_text || '') + '">')
+                            .append('<label>Option A Next Step</label>')
+                            .append('<input type="text" class="step-option-a-next" name="option_a_step_id" value="' + (step.option_a_step_id || '') + '">')
                     )
                     .append(
                         $('<fieldset>')
-                            .append('<label for="step-option-b">Option B Text</label>')
-                            .append('<input type="text" class="step-option-b" value="' + (step.option_b_text || '') + '">')
-                            .append('<label for="step-option-a-next">Option B Next Step</label>')
-                            .append('<input type="text" class="step-option-b-next" value="' + (step.option_b_step_id || '') + '">')
+                            .append('<label>Option B Text</label>')
+                            .append('<input type="text" class="step-option-b" name="option_b_text" value="' + (step.option_b_text || '') + '">')
+                            .append('<label>Option B Next Step</label>')
+                            .append('<input type="text" class="step-option-b-next" name="option_b_step_id" value="' + (step.option_b_step_id || '') + '">')
                     )
                     .append( $('<fieldset>').append('<input type="submit" value="Update">') );
 
             currentSteps.append(newStep);
         });
     }
+
+    function gatherUpdateFormData(e) {
+        e.preventDefault();
+        var stepData = {};
+        $(this).serializeArray().forEach(function formatStepData(field) {
+            stepData[field.name] = field.value;
+        });
+        stepData.id = Number($(this).parent().find('.step-id').text());
+        ns.builder.updateStep(stepData);
+    }
+
+    ns.builder.updateStep = function updateStep(step) {
+        $.ajax({
+            url: '/steps/' + step.id,
+            type: 'PATCH',
+            dataType: 'json',
+            success: function stepUpdated(data) {
+                ns.showMessage('Step updated!');
+            },
+            error: function stepUpdateError(xhr) {
+                console.error(xhr);
+                ns.showMessage('Unable to update step.', JSON.stringify(xhr.responseText));
+            }
+        });
+    };
 
 
     window.cyoa = ns;

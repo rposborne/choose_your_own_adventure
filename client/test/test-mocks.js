@@ -39,4 +39,10 @@ if (window.location.search.match(/[^a-z]debug([^a-z]|$)/i)) {
       proxy: 'test/mocks/multi-step.json'
     });
 
+    $.mockjax({
+      url: '/steps/123',
+      type: 'PATCH',
+      proxy: 'test/mocks/single-step.json'
+    });
+
 }
