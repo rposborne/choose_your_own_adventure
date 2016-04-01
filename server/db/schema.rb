@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 1) do
 
   create_table "stories", force: :cascade do |t|
     t.string   "title"
+    t.integer  "first_step_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
