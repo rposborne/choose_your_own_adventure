@@ -23,7 +23,6 @@ def import_active_record_tasks(default_rake_app)
   migrations_path                      = db_dir + '/migrations'
 
   # WARNING! This MUST be a String not a Symbol
-  puts ENV["RACK_ENV"]
   DatabaseTasks.env                    = ENV["RACK_ENV"] || "development"
   DatabaseTasks.db_dir                 = db_dir
   DatabaseTasks.database_configuration = YAML.load_file(db_config_path)
