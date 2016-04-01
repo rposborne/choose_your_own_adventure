@@ -34,7 +34,7 @@
         }
     }
 
-    function showCreate(e) {``
+    function showCreate(e) {
         e.preventDefault();
         ns.builder.createStory( $(this).find(':text').val(), function createDone(data) {
             if (data) {
@@ -116,6 +116,7 @@
             type: 'GET',
             dataType: 'json',
             success: function stepsLoaded(data) {
+                console.log('loaded steps', data);
                 loadedSteps = data;
                 renderSteps(loadedSteps, story);
             },
@@ -135,6 +136,8 @@
                 .append('<form>')
                 .find('form')
                     .addClass('edit-story-step')
+                    .append('<input type="hidden" name="id" value="' + step.id + '">')
+                    .append('<input type="hidden" name="story_id" value="' + step.story_id + '">')
                     .append(
                         $('<fieldset>')
                             .append('<h4>Step Text</h4>')
@@ -166,13 +169,12 @@
         $(this).serializeArray().forEach(function formatStepData(field) {
             stepData[field.name] = field.value;
         });
-        stepData.id = Number($(this).parent().find('.step-id').text());
         ns.builder.updateStep(stepData);
     }
 
     ns.builder.updateStep = function updateStep(step) {
         $.ajax({
-            url: '/steps/' + step.id,
+            url: '/stories/' + step.story_id + '/steps/' + step.id,
             type: 'PATCH',
             dataType: 'json',
             success: function stepUpdated(data) {
@@ -184,6 +186,11 @@
             }
         });
     };
+
+    createStepForm.submit(function gatherStepCreateData(e) {
+        e.preventDefault();
+        // TODO
+    });
 
 
     window.cyoa = ns;

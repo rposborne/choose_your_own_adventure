@@ -7,6 +7,7 @@
         "option_b_text": "No",
         "option_b_step_id": 789,
         "termination": false,
+        "story_id": 123,
         "created_at": 1398902555536968492,
         "updated_at": 1398902555536968492
     },
@@ -18,6 +19,7 @@
         "option_b_text": "No",
         "option_b_step_id": null,
         "termination": false,
+        "story_id": 123,
         "created_at": 1398902555536968492,
         "updated_at": 1398902555536968492
     },
@@ -29,6 +31,7 @@
         "option_b_text": null,
         "option_b_step_id": null,
         "termination": true,
+        "story_id": 123,
         "created_at": 1398902555536968492,
         "updated_at": 1398902555536968492
     }

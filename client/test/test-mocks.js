@@ -40,8 +40,14 @@ if (window.location.search.match(/[^a-z]debug([^a-z]|$)/i)) {
     });
 
     $.mockjax({
-      url: '/steps/123',
+      url: '/stories/123/steps/123',
       type: 'PATCH',
+      proxy: 'test/mocks/single-step.json'
+    });
+
+    $.mockjax({
+      url: '/stories/123/steps',
+      type: 'POST',
       proxy: 'test/mocks/single-step.json'
     });
 
