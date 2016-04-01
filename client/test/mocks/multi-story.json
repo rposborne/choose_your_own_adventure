@@ -1,0 +1,23 @@
+[
+    {
+        "id": 123,
+        "title": "Alice in Wonderland",
+        "first_step": 123,
+        "created_at": 1398902555536968492,
+        "updated_at": 1398902555536968492
+    },
+    {
+        "id": 456,
+        "title": "James and the Giant Peach",
+        "first_step": 73758,
+        "created_at": 1398902555536968492,
+        "updated_at": 1398902555536968492
+    },
+    {
+        "id": 789,
+        "title": "The Lion, the Witch, and the Wardrobe",
+        "first_step": 365895,
+        "created_at": 1398902555536968492,
+        "updated_at": 1398902555536968492
+    }
+]
