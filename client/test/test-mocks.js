@@ -21,4 +21,16 @@ if (window.location.search.match(/[^a-z]debug([^a-z]|$)/i)) {
       proxy: 'test/mocks/token.json'
     });
 
+    $.mockjax({
+      url: '/stories',
+      type: 'GET',
+      proxy: 'test/mocks/multi-story.json'
+    });
+
+    $.mockjax({
+      url: '/stories',
+      type: 'POST',
+      proxy: 'test/mocks/single-story.json'
+    });
+
 }
