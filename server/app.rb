@@ -15,6 +15,10 @@ before do
   content_type "application/json"
 end
 
+before '/stories/**/*' do
+  halt_unless_user
+end
+
 helpers do
   def current_user
     Adventure::Session.where(token: request.env["HTTP_AUTHORIZATION"].to_s.split.last).first
@@ -40,19 +44,19 @@ post "/login" do
 end
 
 get "/stories" do
-  halt_unless_user
+
 
   Adventure::Story.all.to_json
 end
 
 get "/stories/:id" do
-  halt_unless_user
+
 
   Adventure::Story.find(params["id"]).to_json
 end
 
 post "/stories" do
-  halt_unless_user
+
 
   payload = JSON.parse(request.body.read)
   story = Adventure::Story.create(payload)
@@ -61,7 +65,7 @@ post "/stories" do
 end
 
 delete "/stories/:id" do
-  halt_unless_user
+
 
   story = Adventure::Story.find(params["id"])
   story.destroy
@@ -72,12 +76,12 @@ end
 # STEPS
 
 get "/stories/:story_id/steps" do
-  halt_unless_user
+
   Adventure::Step.where(story_id: params["story_id"]).to_json
 end
 
 post "/stories/:story_id/steps" do
-  halt_unless_user
+
 
   payload = JSON.parse(request.body.read)
   story = Adventure::Story.find(params["story_id"])
@@ -87,7 +91,7 @@ post "/stories/:story_id/steps" do
 end
 
 patch "/stories/:story_id/steps/:id" do
-  halt_unless_user
+
 
   payload = JSON.parse(request.body.read)
   step = Adventure::Step.find(id: params['id'])
@@ -97,7 +101,7 @@ patch "/stories/:story_id/steps/:id" do
 end
 
 delete "/stories/:story_id/steps/:id" do
-  halt_unless_user
+
 
   step = Adventure::Step.find(params["id"])
   step.destroy
