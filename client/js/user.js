@@ -4,9 +4,14 @@
     ns.user = {};  // local module namespace
 
     ns.user.init = function userInit() {
-        $('#login').submit(function(e) {
+        $('#login').submit(function loginSubmitted(e) {
             e.preventDefault();
-            ns.user.login();
+            ns.user.login(function loginSuccess(err) {
+                if (!err) {
+                    $('#login').hide();
+                    $('main > nav').show();
+                }
+            });
         });
     };
 
@@ -24,10 +29,12 @@
                 } else {
                     ns.showMessage('There was a problem logging you in.');
                 }
+                cb();
             },
             error: function loginFail(xhr) {
                 console.error(xhr);
                 ns.showMessage('There was a problem logging you in.');
+                cb(xhr.status);
             }
         });
     };
