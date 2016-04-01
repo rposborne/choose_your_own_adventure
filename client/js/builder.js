@@ -90,6 +90,8 @@
             url: '/stories',
             type: 'post',
             dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify({ title: title }),
             success: cb,
             error: function createError(xhr) {
                 var errData;
@@ -184,6 +186,8 @@
         $.ajax({
             url: '/stories/' + step.story_id + '/steps/' + step.id,
             type: 'PATCH',
+            contentType: 'application/json',
+            data: JSON.stringify(step),
             dataType: 'json',
             success: function stepUpdated(data) {
                 ns.showMessage('Step updated!');
@@ -204,6 +208,8 @@
         $.ajax({
             url: '/stories/' + step.story_id + '/steps',
             type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(step),
             dataType: 'json',
             success: function stepUpdated(data) {
                 currentSteps.append(getStepElement(data));
