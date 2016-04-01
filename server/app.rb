@@ -17,7 +17,7 @@ end
 
 helpers do
   def current_user
-    Adventure::Session.where(token: request.env["HTTP_AUTHORIZATION"].split.last).first
+    Adventure::Session.where(token: request.env["HTTP_AUTHORIZATION"].to_s.split.last).first
   end
 
   def halt_unless_user

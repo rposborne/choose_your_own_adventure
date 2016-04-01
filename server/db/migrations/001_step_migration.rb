@@ -14,9 +14,10 @@ class StepMigration < ActiveRecord::Migration
 
     create_table :stories do |t|
       t.string "title"
+      t.integer "first_step_id"
       t.timestamps null: true
     end
-    
+
     create_table :sessions do |t|
       t.string 'token'
       t.timestamps null: true
