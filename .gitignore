@@ -15,6 +15,7 @@
 /_yardoc/
 /doc/
 /rdoc/
+.sass-cache/
 
 ## Environment normalization:
 /.bundle/
