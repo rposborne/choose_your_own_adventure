@@ -24,11 +24,19 @@
             success: function loginSuccess(data) {
                 console.info('login?', data);
                 ns.user.token = data.token;
+
+                $.ajaxSetup({
+                    headers: {
+                        Authorization: 'token ' + ns.user.token
+                    }
+                });
+
                 if (ns.user.token) {
                     ns.showMessage('You have been logged in.');
                 } else {
                     ns.showMessage('There was a problem logging you in.');
                 }
+
                 cb();
             },
             error: function loginFail(xhr) {
