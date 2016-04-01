@@ -23,11 +23,19 @@ helpers do
   def halt_unless_user
     halt 401, {msg: "go away!"}.to_json unless current_user
   end
+
+  def respond_with_or_errors(code, obj)
+    if obj.valid?
+      [code, obj.to_json]
+    else
+      [422, {errors: obj.errors.to_h}.to_json]
+    end
+  end
 end
 
 post "/login" do
   token = SecureRandom.hex
-  Adventure::Session.create!(token: token)
+  Adventure::Session.create(token: token)
   [201, {token: token}.to_json]
 end
 
@@ -47,15 +55,18 @@ post "/stories" do
   halt_unless_user
 
   payload = JSON.parse(request.body.read)
-  json_body = Adventure::Story.create!(payload).to_json
-  [201, json_body]
+  story = Adventure::Story.create(payload)
+
+  respond_with_or_errors(201, story)
 end
 
 delete "/stories/:id" do
   halt_unless_user
 
   story = Adventure::Story.find(params["id"])
-  [202, story.destroy!.to_json]
+  story.destroy
+
+  respond_with_or_errors(202, story)
 end
 
 # STEPS
@@ -70,8 +81,9 @@ post "/stories/:story_id/steps" do
 
   payload = JSON.parse(request.body.read)
   story = Adventure::Story.find(params["story_id"])
+  step = story.steps.create(payload)
 
-  [201, story.steps.create!(payload).to_json]
+  respond_with_or_errors(201, step)
 end
 
 patch "/stories/:story_id/steps/:id" do
@@ -81,12 +93,14 @@ patch "/stories/:story_id/steps/:id" do
   step = Adventure::Step.find(id: params['id'])
   step.update(payload)
 
-  [202, step.to_json]
+  respond_with_or_errors(202, step)
 end
 
 delete "/stories/:story_id/steps/:id" do
   halt_unless_user
 
   step = Adventure::Step.find(params["id"])
-  [202, step.destroy!.to_json]
+  step.destroy
+
+  respond_with_or_errors(202, step)
 end

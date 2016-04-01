@@ -40,6 +40,18 @@ class AppTest < Minitest::Test
     assert_equal(prev_count + 1, Adventure::Story.count)
   end
 
+  def test_can_handle_bad_story
+    prev_count = Adventure::Story.count
+    response = post_with_auth("/stories", {title: ""})
+
+    refute response.ok?
+    response_data = JSON.parse(response.body)
+    assert_equal(Hash, response_data["errors"].class)
+    # {"errors" : {"title" : "can't be blank}}
+    assert_equal("title", response_data["errors"].first.first)
+    assert_equal(prev_count, Adventure::Story.count)
+  end
+
   def test_can_get_a_stories_steps
     story = Adventure::Story.create(title: "bob")
     response = get_with_auth("/stories/#{story.id}/steps")
@@ -57,5 +69,4 @@ class AppTest < Minitest::Test
     assert_equal(Hash, JSON.parse(response.body).class)
     assert_equal(prev_count + 1, Adventure::Step.count)
   end
-
 end
