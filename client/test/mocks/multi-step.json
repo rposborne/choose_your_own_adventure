@@ -1,0 +1,36 @@
+[
+    {
+        "id": 123,
+        "body": "Alice sees a white rabbit, does she follow it or not?",
+        "option_a_text": "Yes",
+        "option_a_step": 456,
+        "option_b_text": "No",
+        "option_b_step": 789,
+        "termination": false,
+        "created_at": 1398902555536968492,
+        "updated_at": 1398902555536968492
+    },
+    {
+        "id": 456,
+        "body": "She falls down the rabbit hole! Alice sees a table with a piece of cake and a note that says 'eat me'... Does she eat it?",
+        "option_a_text": "Yes",
+        "option_a_step": null,
+        "option_b_text": "No",
+        "option_b_step": null,
+        "termination": false,
+        "created_at": 1398902555536968492,
+        "updated_at": 1398902555536968492
+    },
+    {
+        "id": 789,
+        "body": "She climbs out the rabbit hole. Adventure complete.",
+        "option_a_text": null,
+        "option_a_step": null,
+        "option_b_text": null,
+        "option_b_step": null,
+        "termination": true,
+        "created_at": 1398902555536968492,
+        "updated_at": 1398902555536968492
+    }
+
+]

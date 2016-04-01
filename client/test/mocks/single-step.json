@@ -1,0 +1,11 @@
+{
+    "id": 123,
+    "body": "Alice sees a white rabbit, does she follow it or not?",
+    "option_a_text": "Yes",
+    "option_a_step": 456,
+    "option_a_text": "No",
+    "option_a_step": 789,
+    "termination": false,
+    "created_at": 1398902555536968492,
+    "updated_at": 1398902555536968492
+}
