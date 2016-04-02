@@ -53,7 +53,7 @@ end
 
 get "/stories/:id" do
   story = Adventure::Story.find(params["id"])
-  story.as_json(include: :steps)
+  story.as_json(include: :steps).to_json
 end
 
 post "/stories" do
