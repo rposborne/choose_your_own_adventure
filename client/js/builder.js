@@ -148,7 +148,7 @@
                 .append(
                     $('<fieldset>')
                         .append('<h4>Step Text</h4>')
-                        .append('<textarea class="step-text" name="body">' + step.body + '</textarea>')
+                        .append('<textarea class="step-text" name="body" required>' + step.body + '</textarea>')
                 )
                 .append(
                     $('<fieldset>')
