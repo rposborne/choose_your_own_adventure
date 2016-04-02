@@ -37,13 +37,13 @@ class AppTest < Minitest::Test
 
   def fixture(name)
     path = File.expand_path(File.join(__FILE__, "..", "..", "..", "client", "test", "mocks", name))
-    JSON.parse(File.read(path)).except('id')
+    JSON.parse(File.read(path)).except("id")
   end
 
   def auth_action
     @session ||= Adventure::Session.create!(token: SecureRandom.hex)
-    header 'AUTHORIZATION', "token #{@session.token}"
-    header 'Content-Type', "application/json"
+    header "AUTHORIZATION", "token #{@session.token}"
+    header "Content-Type", "application/json"
   end
 
   def test_can_login
@@ -57,7 +57,7 @@ class AppTest < Minitest::Test
 
   def test_can_create_story
     prev_count = Adventure::Story.count
-    response = post_with_auth("/stories", title: 'thing')
+    response = post_with_auth("/stories", title: "thing")
 
     assert response
     assert_equal(String, JSON.parse(response.body)["title"].class)
@@ -93,7 +93,7 @@ class AppTest < Minitest::Test
 
   def test_can_handle_bad_story
     prev_count = Adventure::Story.count
-    response = post_with_auth("/stories", {title: ""})
+    response = post_with_auth("/stories", title: "")
 
     refute response.ok?
     response_data = JSON.parse(response.body)
@@ -121,12 +121,12 @@ class AppTest < Minitest::Test
 
   def test_can_update_a_signular_step
     step = story.steps.create(fixture("single-step.json"))
-    response = patch_with_auth("/stories/#{story.id}/steps/#{step.id}", {body: 'blah'})
+    response = patch_with_auth("/stories/#{story.id}/steps/#{step.id}", body: "blah")
 
     assert response
     payload = JSON.parse(response.body)
     assert_equal(Hash, payload.class)
-    assert_equal('blah', payload["body"])
+    assert_equal("blah", payload["body"])
   end
 
   def test_can_destroy_a_signular_step
@@ -136,12 +136,12 @@ class AppTest < Minitest::Test
     assert response
     payload = JSON.parse(response.body)
     assert_equal(Hash, payload.class)
-    assert_equal('Alice sees a white rabbit, does she follow it or not?', payload["body"])
+    assert_equal("Alice sees a white rabbit, does she follow it or not?", payload["body"])
   end
 
   def test_can_create_a_stories_steps
     prev_count = Adventure::Step.count
-    response = post_with_auth("/stories/#{story.id}/steps", {body: "bob"})
+    response = post_with_auth("/stories/#{story.id}/steps", body: "bob")
 
     assert response
     assert_equal(Hash, JSON.parse(response.body).class)

@@ -1,4 +1,4 @@
-ENV["RACK_ENV"] ||= 'development'
+ENV["RACK_ENV"] ||= "development"
 
 require "rubygems"
 require "bundler/setup"
@@ -7,15 +7,14 @@ require "json"
 
 require_relative "lib/adventure"
 
-
 set :static, true
-set :public_folder, Proc.new { File.join(root, "..", "client") }
+set :public_folder, proc { File.join(root, "..", "client") }
 
 before do
   content_type "application/json"
 end
 
-before '/stories/**/*' do
+before "/stories/**/*" do
   halt_unless_user
 end
 
@@ -25,14 +24,14 @@ helpers do
   end
 
   def halt_unless_user
-    halt 401, {msg: "go away!"}.to_json unless current_user
+    halt 401, { msg: "go away!" }.to_json unless current_user
   end
 
   def respond_with_or_errors(code, obj)
     if obj.valid?
       [code, obj.to_json]
     else
-      [422, {errors: obj.errors.to_h}.to_json]
+      [422, { errors: obj.errors.to_h }.to_json]
     end
   end
 end
@@ -80,14 +79,14 @@ post "/stories/:story_id/steps" do
 end
 
 get "/stories/:story_id/steps/:id" do
-  step = Adventure::Step.find(params['id'])
+  step = Adventure::Step.find(params["id"])
 
   respond_with_or_errors(200, step)
 end
 
 patch "/stories/:story_id/steps/:id" do
   payload = JSON.parse(request.body.read)
-  step = Adventure::Step.find(params['id'])
+  step = Adventure::Step.find(params["id"])
   step.update(payload)
 
   respond_with_or_errors(202, step)

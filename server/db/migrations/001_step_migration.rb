@@ -19,7 +19,7 @@ class StepMigration < ActiveRecord::Migration
     end
 
     create_table :sessions do |t|
-      t.string 'token'
+      t.string "token"
       t.timestamps null: true
     end
   end
