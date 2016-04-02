@@ -36,6 +36,11 @@ helpers do
   end
 end
 
+get "/" do
+  content_type "text/html" 
+  File.read(File.join(settings.root, "..", "client", 'index.html'))
+end
+
 post "/login" do
   token = SecureRandom.hex
   Adventure::Session.create(token: token)
