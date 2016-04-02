@@ -40,8 +40,26 @@
             <section id='create-story' class='view'>
                 <h2>Create a New Story!</h2>
                 <form>
-                    <label for='new-story-name'>Story Name</label>
-                    <input type='text' id='new-story-name' required>
+                    <fieldset>
+                        <label for='new-story-name'>Story Name</label>
+                        <input type='text' id='new-story-name' required>
+                    </fieldset>
+                    <fieldset>
+                        <h4>First Step Text</h4>
+                        <textarea id='new-story-step-body' name='body' required></textarea>
+                    </fieldset>
+                    <fieldset>
+                        <div>
+                            <label for='new-story-option-a'>Option A</label>
+                            <input type='text' id='new-story-option-a' name='option_a_text'>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <div>
+                            <label for='new-story-option-b'>Option B</label>
+                            <input type='text' id='new-story-option-b' name='option_b_text'>
+                        </div>
+                    </fieldset>
                     <input type='submit' value='Create It'>
                 </form>
             </section>

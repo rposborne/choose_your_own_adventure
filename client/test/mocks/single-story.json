@@ -3,5 +3,19 @@
     "title": "Alice in Wonderland",
     "first_step_id": 123,
     "created_at": "2016-04-01 20:07:14 -0400",
-    "updated_at": "2016-04-01 20:07:14 -0400"
+    "updated_at": "2016-04-01 20:07:14 -0400",
+    "steps": [
+        {
+            "id": 123,
+            "body": "Alice sees a white rabbit, does she follow it or not?",
+            "option_a_text": "Yes",
+            "option_a_step_id": null,
+            "option_b_text": "No",
+            "option_b_step_id": null,
+            "termination": false,
+            "story_id": 123,
+            "created_at": "2016-04-01 20:07:14 -0400",
+            "updated_at": "2016-04-01 20:07:14 -0400"
+        }
+    ]
 }

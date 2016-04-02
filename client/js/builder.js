@@ -37,7 +37,15 @@
 
     function showCreate(e) {
         e.preventDefault();
-        ns.builder.createStory( $(this).find(':text').val(), function createDone(data) {
+
+        var title = $(this).find('#new-story-name').val();
+        var stepOne = {
+            body: $(this).find('#new-story-step-body').val(),
+            option_a_text: $(this).find('#new-story-option-a').val(),
+            option_b_text: $(this).find('#new-story-option-b').val()
+        };
+
+        ns.builder.createStory( title, stepOne, function createDone(data) {
             if (data) {
                 ns.views.hide();
                 createStory.find(':text').val('');
@@ -83,7 +91,7 @@
         createStory.show();
     };
 
-    ns.builder.createStory = function createStory(title, cb) {
+    ns.builder.createStory = function createStory(title, step, cb) {
         cb = cb || function(){};
 
         $.ajax({
@@ -91,7 +99,7 @@
             type: 'post',
             dataType: 'json',
             contentType: 'application/json',
-            data: JSON.stringify({ title: title }),
+            data: JSON.stringify({ title: title, step: step }),
             success: cb,
             error: function createError(xhr) {
                 var errData;
