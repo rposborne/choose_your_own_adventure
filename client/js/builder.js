@@ -110,6 +110,7 @@
         editStory.show();
         console.log('editing story', data);
         editStory.find('.story-name').text(data.title);
+        createStepForm.find('.story-id').val(data.id);
         loadStorySteps(data);
     };
 
