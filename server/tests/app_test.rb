@@ -9,7 +9,7 @@ class AppTest < Minitest::Test
   end
 
   def story
-    @story ||= Adventure::Story.create fixture("request-body_story-create.json") 
+    @story ||= Adventure::Story.create fixture("request-body_story-create.json")
   end
 
   def app
@@ -61,7 +61,7 @@ class AppTest < Minitest::Test
     response = post_with_auth("/stories", fixture("request-body_story-create.json"))
 
     assert response
-    body = JSON.parse(response.body)  
+    body = JSON.parse(response.body)
     assert_equal(String, body["title"].class)
     assert_equal(Adventure::Story.find(body["id"]).steps.first.id, body["first_step_id"])
     assert_equal(prev_count + 1, Adventure::Story.count)

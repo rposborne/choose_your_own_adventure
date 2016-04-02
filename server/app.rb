@@ -37,8 +37,8 @@ helpers do
 end
 
 get "/" do
-  content_type "text/html" 
-  File.read(File.join(settings.root, "..", "client", 'index.html'))
+  content_type "text/html"
+  File.read(File.join(settings.root, "..", "client", "index.html"))
 end
 
 post "/login" do

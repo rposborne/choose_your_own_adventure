@@ -7,7 +7,7 @@ gem "rake"
 
 group :test do
   gem "pry"
-  gem 'simplecov', :require => false
+  gem "simplecov", require: false
   gem "minitest"
   gem "rack-test"
 end
