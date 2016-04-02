@@ -49,7 +49,7 @@
             <section id='edit-story' class='view'>
                 <h2>Editing Story: <span class='story-name'></span></h2>
 
-                <div><button class='show-create-step'>Create New Step</button></div>
+                <div><button class='show-create-step'>Toggle Step Creation</button></div>
                 <form class='create-story-step'>
                     <input type='hidden' class='story-id' name='story_id' value=''>
                     <h3>New Step</h3>
@@ -58,9 +58,14 @@
                         <textarea id='new-step-text' name='body'></textarea>
                     </fieldset>
                     <fieldset>
+                        <label>Is this a story-ending step?</label>
+                        <input type='radio' name='termination' value='1'> Yes
+                        <input type='radio' name='termination' value='0'> No
+                    </fieldset>
+                    <fieldset>
                         <div>
                             <label for='new-step-option-a'>Option A</label>
-                            <input type='text' id='new-step-option-a' name='option_b_text'>
+                            <input type='text' id='new-step-option-a' name='option_a_text'>
                         </div>
                     </fieldset>
                     <fieldset>

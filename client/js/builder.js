@@ -152,6 +152,14 @@
                 )
                 .append(
                     $('<fieldset>')
+                        .append('<label>Is this a story-ending step?</label>')
+                        .append('<input type="radio" name="termination" value="1" checked="' + ((step.termination) ? 'checked' : '') + '">')
+                        .append(' Yes ')
+                        .append('<input type="radio" name="termination" value="0" checked="' + ((step.termination) ? '' : 'checked') + '">')
+                        .append(' No ')
+                )
+                .append(
+                    $('<fieldset>')
                         .append('<label>Option A Text</label>')
                         .append('<input type="text" class="step-option-a" name="option_a_text" value="' + (step.option_a_text || '') + '">')
                         .append('<label>Option A Next Step</label>')
@@ -173,6 +181,9 @@
         var data = {};
         $(elem).serializeArray().forEach(function formatFormData(field) {
             data[field.name] = field.value;
+            if (field.name === 'termination') {
+                data[field.name] = !!Number(field.value);
+            }
         });
         return data;
     }
