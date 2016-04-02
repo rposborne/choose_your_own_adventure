@@ -3,6 +3,14 @@ require_relative "test_helper"
 class AppTest < Minitest::Test
   include Rack::Test::Methods
 
+  def setup
+    Adventure::Story.delete_all
+  end
+
+  def story
+    @story ||= Adventure::Story.create(fixture("single-story.json"))
+  end
+
   def app
     Sinatra::Application
   end
@@ -22,10 +30,20 @@ class AppTest < Minitest::Test
     delete(path)
   end
 
+  def patch_with_auth(path, data)
+    auth_action
+    patch(path, data.to_json)
+  end
+
+  def fixture(name)
+    path = File.expand_path(File.join(__FILE__, "..", "..", "..", "client", "test", "mocks", name))
+    JSON.parse(File.read(path)).except("id")
+  end
+
   def auth_action
     @session ||= Adventure::Session.create!(token: SecureRandom.hex)
-    header 'AUTHORIZATION', "token #{@session.token}"
-    header 'Content-Type', "application/json"
+    header "AUTHORIZATION", "token #{@session.token}"
+    header "Content-Type", "application/json"
   end
 
   def test_can_login
@@ -39,7 +57,7 @@ class AppTest < Minitest::Test
 
   def test_can_create_story
     prev_count = Adventure::Story.count
-    response = post_with_auth("/stories", title: 'thing')
+    response = post_with_auth("/stories", title: "thing")
 
     assert response
     assert_equal(String, JSON.parse(response.body)["title"].class)
@@ -47,18 +65,24 @@ class AppTest < Minitest::Test
   end
 
   def test_can_get_all_stories
-    Adventure::Story.create(title: "bob")
+    story
     response = get_with_auth("/stories")
 
     assert response
     body = JSON.parse(response.body)
     assert_equal(Array, body.class)
-    assert_equal("bob", body.first["title"])
+    assert_equal("Alice in Wonderland", body.first["title"])
   end
 
+  def test_can_get_a_single_story
+    response = get_with_auth("/stories/#{story.id}")
+
+    assert response
+    assert_equal(Hash, JSON.parse(response.body).class)
+  end
 
   def test_can_destroy_story
-    story = Adventure::Story.create(title: "bob")
+    story
     prev_count = Adventure::Story.count
     response = destroy_with_auth("/stories/#{story.id}")
 
@@ -69,7 +93,7 @@ class AppTest < Minitest::Test
 
   def test_can_handle_bad_story
     prev_count = Adventure::Story.count
-    response = post_with_auth("/stories", {title: ""})
+    response = post_with_auth("/stories", title: "")
 
     refute response.ok?
     response_data = JSON.parse(response.body)
@@ -81,17 +105,43 @@ class AppTest < Minitest::Test
   end
 
   def test_can_get_a_stories_steps
-    story = Adventure::Story.create(title: "bob")
     response = get_with_auth("/stories/#{story.id}/steps")
 
     assert response
     assert_equal(Array, JSON.parse(response.body).class)
   end
 
+  def test_can_get_a_signular_step
+    step = story.steps.create(fixture("single-step.json"))
+    response = get_with_auth("/stories/#{story.id}/steps/#{step.id}")
+
+    assert response
+    assert_equal(Hash, JSON.parse(response.body).class)
+  end
+
+  def test_can_update_a_signular_step
+    step = story.steps.create(fixture("single-step.json"))
+    response = patch_with_auth("/stories/#{story.id}/steps/#{step.id}", body: "blah")
+
+    assert response
+    payload = JSON.parse(response.body)
+    assert_equal(Hash, payload.class)
+    assert_equal("blah", payload["body"])
+  end
+
+  def test_can_destroy_a_signular_step
+    step = story.steps.create(fixture("single-step.json"))
+    response = destroy_with_auth("/stories/#{story.id}/steps/#{step.id}")
+
+    assert response
+    payload = JSON.parse(response.body)
+    assert_equal(Hash, payload.class)
+    assert_equal("Alice sees a white rabbit, does she follow it or not?", payload["body"])
+  end
+
   def test_can_create_a_stories_steps
-    story = Adventure::Story.create(title: "bob")
     prev_count = Adventure::Step.count
-    response = post_with_auth("/stories/#{story.id}/steps", {body: "bob"})
+    response = post_with_auth("/stories/#{story.id}/steps", body: "bob")
 
     assert response
     assert_equal(Hash, JSON.parse(response.body).class)
