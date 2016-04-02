@@ -40,24 +40,18 @@ end
 post "/login" do
   token = SecureRandom.hex
   Adventure::Session.create(token: token)
-  [201, {token: token}.to_json]
+  [201, { token: token }.to_json]
 end
 
 get "/stories" do
-
-
   Adventure::Story.all.to_json
 end
 
 get "/stories/:id" do
-
-
   Adventure::Story.find(params["id"]).to_json
 end
 
 post "/stories" do
-
-
   payload = JSON.parse(request.body.read)
   story = Adventure::Story.create(payload)
 
@@ -65,8 +59,6 @@ post "/stories" do
 end
 
 delete "/stories/:id" do
-
-
   story = Adventure::Story.find(params["id"])
   story.destroy
 
@@ -76,13 +68,10 @@ end
 # STEPS
 
 get "/stories/:story_id/steps" do
-
   Adventure::Step.where(story_id: params["story_id"]).to_json
 end
 
 post "/stories/:story_id/steps" do
-
-
   payload = JSON.parse(request.body.read)
   story = Adventure::Story.find(params["story_id"])
   step = story.steps.create(payload)
@@ -90,19 +79,21 @@ post "/stories/:story_id/steps" do
   respond_with_or_errors(201, step)
 end
 
+get "/stories/:story_id/steps/:id" do
+  step = Adventure::Step.find(params['id'])
+
+  respond_with_or_errors(200, step)
+end
+
 patch "/stories/:story_id/steps/:id" do
-
-
   payload = JSON.parse(request.body.read)
-  step = Adventure::Step.find(id: params['id'])
+  step = Adventure::Step.find(params['id'])
   step.update(payload)
 
   respond_with_or_errors(202, step)
 end
 
 delete "/stories/:story_id/steps/:id" do
-
-
   step = Adventure::Step.find(params["id"])
   step.destroy
 
