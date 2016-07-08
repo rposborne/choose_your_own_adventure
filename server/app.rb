@@ -10,6 +10,13 @@ require_relative "lib/adventure"
 set :static, true
 set :public_folder, proc { File.join(root, "..", "client") }
 
+use Rack::Cors do
+  allow do
+    origins '*'
+    resource '/**/*', headers: :any, methods: :get
+  end
+end
+
 before do
   content_type "application/json"
 end

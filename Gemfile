@@ -1,7 +1,8 @@
 source "https://rubygems.org"
 
 gem "sinatra"
-gem "activerecord"
+gem 'rack-cors', :require => 'rack/cors'
+Gem "activerecord"
 gem "pg"
 gem "rake"
 
