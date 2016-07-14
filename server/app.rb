@@ -4,6 +4,7 @@ require "rubygems"
 require "bundler/setup"
 require "sinatra"
 require "json"
+require "rack/cors"
 
 require_relative "lib/adventure"
 
@@ -12,8 +13,8 @@ set :public_folder, proc { File.join(root, "..", "client") }
 
 use Rack::Cors do
   allow do
-    origins '*'
-    resource '/**/*', headers: :any, methods: :get
+    origins "*"
+    resource "/**/*", headers: :any, methods: :get
   end
 end
 
