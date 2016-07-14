@@ -56,7 +56,7 @@
 
     ns.builder.loadStoryList = function loadStoryList() {
         $.ajax({
-            url: '/stories',
+            url: '/adventure',
             type: 'get',
             dataType: 'json',
             success: function loadStorySuccess(data) {
@@ -95,7 +95,7 @@
         cb = cb || function(){};
 
         $.ajax({
-            url: '/stories',
+            url: '/adventure',
             type: 'post',
             dataType: 'json',
             contentType: 'application/json',
@@ -124,7 +124,7 @@
 
     function loadStorySteps(story) {
         $.ajax({
-            url: '/stories/' + story.id + '/steps',
+            url: '/adventure/' + story.id + '/steps',
             type: 'GET',
             dataType: 'json',
             success: function stepsLoaded(data) {
@@ -204,7 +204,7 @@
 
     ns.builder.updateStep = function updateStep(step) {
         $.ajax({
-            url: '/stories/' + step.story_id + '/steps/' + step.id,
+            url: '/adventure/' + step.story_id + '/steps/' + step.id,
             type: 'PATCH',
             contentType: 'application/json',
             data: JSON.stringify(step),
@@ -226,7 +226,7 @@
 
     ns.builder.createStep = function createStep(step) {
         $.ajax({
-            url: '/stories/' + step.story_id + '/steps',
+            url: '/adventure/' + step.story_id + '/steps',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(step),

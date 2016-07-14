@@ -18,7 +18,7 @@
     ns.user.login = function doLogin(cb) {
         cb = cb || function(){};
         $.ajax({
-            url: '/login',
+            url: '/users/login',
             type: 'POST',
             dataType: 'json',
             success: function loginSuccess(data) {
