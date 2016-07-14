@@ -41,9 +41,12 @@ class AppTest < Minitest::Test
     JSON.parse(File.read(path)).except("id")
   end
 
-  def auth_action
+  def session
     @session ||= Adventure::Session.create!(token: SecureRandom.hex)
-    header "AUTHORIZATION", "token #{@session.token}"
+  end
+
+  def auth_action
+    header "AUTHORIZATION", "token #{session.token}"
     header "Content-Type", "application/json"
   end
 
@@ -54,6 +57,12 @@ class AppTest < Minitest::Test
     assert response
     assert_equal(String, JSON.parse(response.body)["token"].class)
     assert_equal(prev_count + 1, Adventure::Session.count)
+  end
+
+  def test_can_get_a_single_user
+    response = get_with_auth("/users/#{session.id}")
+
+    assert_equal(Hash, JSON.parse(response.body).class)
   end
 
   def test_can_create_story

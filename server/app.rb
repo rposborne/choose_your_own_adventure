@@ -49,6 +49,11 @@ get "/" do
   File.read(File.join(settings.root, "..", "client", "index.html"))
 end
 
+get "/users/:id" do
+  session = Adventure::Session.find(params["id"])
+  session.to_json
+end
+
 post "/login" do
   token = SecureRandom.hex
   Adventure::Session.create(token: token)
