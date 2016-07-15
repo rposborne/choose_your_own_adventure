@@ -50,14 +50,15 @@ get "/" do
 end
 
 get "/users/:id" do
+  halt_unless_user
   session = Adventure::Session.find(params["id"])
   session.to_json
 end
 
 post "/users/login" do
   token = SecureRandom.hex
-  Adventure::Session.create(token: token)
-  [201, { token: token }.to_json]
+  session = Adventure::Session.create(token: token)
+  [201, session.to_json]
 end
 
 get "/adventure" do
