@@ -5,25 +5,18 @@ require "bundler/setup"
 require "sinatra"
 require "json"
 require "rack/cors"
-require 'sinatra/cross_origin'
 
 require_relative "lib/adventure"
 
 set :static, true
 set :public_folder, proc { File.join(root, "..", "client") }
 
-
-
-configure do
-  enable :cross_origin
+use Rack::Cors do
+  allow do
+    origins "*"
+    resource "/**/*", headers: :any, methods: [:get, :post, :options, :patch, :put]
+  end
 end
-# 
-# use Rack::Cors do
-#   allow do
-#     origins "*"
-#     resource "/**/*", headers: :any, methods: :get
-#   end
-# end
 
 before do
   content_type "application/json"
@@ -141,4 +134,9 @@ delete  "/adventure/:story_id/steps/:id" do
   step.destroy
 
   respond_with_or_errors(202, step)
+end
+
+
+options "/*" do
+
 end
