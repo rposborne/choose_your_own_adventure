@@ -57,7 +57,7 @@ end
 
 post "/users/login" do
   token = SecureRandom.hex
-  session = Adventure::Session.create(token: token)
+  session = Adventure::Session.create(token: token, login_time: Time.now)
   [201, session.to_json]
 end
 
