@@ -2,6 +2,7 @@ source "https://rubygems.org"
 
 gem "sinatra"
 gem 'rack-cors', :require => 'rack/cors'
+gem "sinatra-cross_origin", "~> 0.3.1"
 gem "activerecord"
 gem "pg"
 gem "rake"
