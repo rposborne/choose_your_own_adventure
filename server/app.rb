@@ -130,6 +130,14 @@ patch "/adventure/:story_id/steps/:id" do
   respond_with_or_errors(202, step)
 end
 
+patch "/users/:id" do
+  payload = JSON.parse(request.body.read)
+  user = Adventure::Session.find(params["id"])
+  user.update(payload)
+
+  respond_with_or_errors(202, user)
+end
+
 delete  "/adventure/:story_id/steps/:id" do
   step = Adventure::Step.find(params["id"])
   step.destroy
