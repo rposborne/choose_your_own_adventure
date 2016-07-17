@@ -14,7 +14,7 @@ set :public_folder, proc { File.join(root, "..", "client") }
 use Rack::Cors do
   allow do
     origins "*"
-    resource "/**/*", headers: :any, methods: [:get, :post, :options, :patch, :put]
+    resource "/*", headers: :any, methods: [:get, :post, :options, :patch, :put]
   end
 end
 
